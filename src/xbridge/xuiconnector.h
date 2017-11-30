@@ -6,22 +6,40 @@
 
 class uint256;
 struct XBridgeTransactionDescr;
-
+/**
+ * @brief The XUIConnector class
+ */
 class XUIConnector
 {
 public:
-    boost::signals2::signal<void (const XBridgeTransactionDescr & tx)> NotifyXBridgePendingTransactionReceived;
+    /**
+     * @brief NotifyXBridgePendingTransactionReceived
+     */
+    boost::signals2::signal<void (const XBridgeTransactionDescr &tx)> NotifyXBridgePendingTransactionReceived;
 
-    boost::signals2::signal<void (const uint256 & id,
+    /**
+     * @brief NotifyXBridgeTransactionStateChanged
+     */
+    boost::signals2::signal<void (const uint256 &id,
                                   const unsigned int state)> NotifyXBridgeTransactionStateChanged;
-    boost::signals2::signal<void (const uint256 & id,
+
+    /**
+     * @brief NotifyXBridgeTransactionCancelled
+     */
+    boost::signals2::signal<void (const uint256 &id,
                                   const uint32_t state,
                                   const uint32_t reason)> NotifyXBridgeTransactionCancelled;
 
-    boost::signals2::signal<void (const std::string & currency,
-                                  const std::string & name,
-                                  const std::string & address)> NotifyXBridgeAddressBookEntryReceived;
+    /**
+     * @brief NotifyXBridgeAddressBookEntryReceived
+     */
+    boost::signals2::signal<void (const std::string &currency,
+                                  const std::string &name,
+                                  const std::string &address)> NotifyXBridgeAddressBookEntryReceived;
 
+    /**
+     * @brief NotifyLogMessage
+     */
     boost::signals2::signal<void (const std::string str)> NotifyLogMessage;
 };
 

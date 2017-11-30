@@ -15,10 +15,16 @@
 //*****************************************************************************
 //*****************************************************************************
 struct XBridgeTransactionDescr;
+/**
+ * @brief XBridgeTransactionDescrPtr
+ */
 typedef boost::shared_ptr<XBridgeTransactionDescr> XBridgeTransactionDescrPtr;
 
 //******************************************************************************
 //******************************************************************************
+/**
+ * @brief The XBridgeTransactionDescr struct
+ */
 struct XBridgeTransactionDescr
 {
     enum
@@ -26,6 +32,9 @@ struct XBridgeTransactionDescr
         COIN = 1000000
     };
 
+    /**
+     * @brief The State enum
+     */
     enum State
     {
         trExpired = -1,
@@ -46,56 +55,168 @@ struct XBridgeTransactionDescr
         trInvalid
     };
 
-    uint256                    id;
+    /**
+     * @brief id
+     */
+    uint256 id;
 
-    char                       role;
+    /**
+     * @brief role
+     */
+    char role;
 
+    /**
+     * @brief hubAddress
+     */
     std::vector<unsigned char> hubAddress;
+
+    /**
+     * @brief confirmAddress
+     */
     std::vector<unsigned char> confirmAddress;
 
-    std::string                from;
-    std::string                fromCurrency;
-    uint64_t                   fromAmount;
-    std::string                to;
-    std::string                toCurrency;
-    uint64_t                   toAmount;
+    /**
+     * @brief from
+     */
+    std::string from;
 
-    uint32_t                   tax;
+    /**
+     * @brief fromCurrency
+     */
+    std::string fromCurrency;
 
-    uint32_t                   lockTimeTx1;
-    uint32_t                   lockTimeTx2;
+    /**
+     * @brief fromAmount
+     */
+    uint64_t fromAmount;
 
-    State                      state;
-    uint32_t                   reason;
+    /**
+     * @brief to
+     */
+    std::string to;
 
+    /**
+     * @brief toCurrency
+     */
+    std::string toCurrency;
+
+    /**
+     * @brief toAmount
+     */
+    uint64_t toAmount;
+
+    /**
+     * @brief tax
+     */
+    uint32_t tax;
+
+    /**
+     * @brief lockTimeTx1
+     */
+    uint32_t lockTimeTx1;
+
+    /**
+     * @brief lockTimeTx2
+     */
+    uint32_t lockTimeTx2;
+
+    /**
+     * @brief state
+     */
+    State state;
+
+    /**
+     * @brief reason
+     */
+    uint32_t reason;
+
+    /**
+     * @brief created
+     */
     boost::posix_time::ptime   created;
+
+    /**
+     * @brief txtime
+     */
     boost::posix_time::ptime   txtime;
 
     // raw bitcoin transactions
-    std::string                binTxId;
-    std::string                binTx;
-    std::string                payTxId;
-    std::string                payTx;
-    std::string                refTxId;
-    std::string                refTx;
+    /**
+     * @brief binTxId
+     */
+    std::string binTxId;
+
+    /**
+     * @brief binTx
+     */
+    std::string binTx;
+
+    /**
+     * @brief payTxId
+     */
+    std::string payTxId;
+
+    /**
+     * @brief payTx
+     */
+    std::string payTx;
+
+    /**
+     * @brief refTxId
+     */
+    std::string refTxId;
+
+    /**
+     * @brief refTx
+     */
+    std::string refTx;
 
     // multisig address and redeem script
-    std::string                multisig;
-    std::string                innerScript;
+
+    /**
+     * @brief multisig
+     */
+    std::string multisig;
+
+    /**
+     * @brief innerScript
+     */
+    std::string innerScript;
 
     // prevtxs for signrawtransaction
     // std::string                prevtxs;
 
-    XBridgePacketPtr           packet;
+    /**
+     * @brief packet
+     */
+    XBridgePacketPtr packet;
 
     // multisig key
-    xbridge::CPubKey           mPubKey;
-    xbridge::CBitcoinSecret    mSecret;
+    /**
+     * @brief mPubKey
+     */
+    xbridge::CPubKey mPubKey;
+
+    /**
+     * @brief mSecret
+     */
+    xbridge::CBitcoinSecret mSecret;
 
     // X key
-    xbridge::CPubKey           xPubKey;
-    xbridge::CBitcoinSecret    xSecret;
 
+    /**
+     * @brief xPubKey
+     */
+    xbridge::CPubKey xPubKey;
+
+    /**
+     * @brief xSecret
+     */
+    xbridge::CBitcoinSecret xSecret;
+
+    /**
+     * @brief XBridgeTransactionDescr
+     */
     XBridgeTransactionDescr()
         : role(0)
         , tax(0)
@@ -112,17 +233,27 @@ struct XBridgeTransactionDescr
 //        return id == d.id;
 //    }
 
-    bool operator < (const XBridgeTransactionDescr & d) const
+    /**
+     * @brief operator <
+     * @param d
+     * @return
+     */
+    bool operator < (const XBridgeTransactionDescr &d) const
     {
         return created < d.created;
     }
 
-    bool operator > (const XBridgeTransactionDescr & d) const
+    /**
+     * @brief operator >
+     * @param d
+     * @return
+     */
+    bool operator > (const XBridgeTransactionDescr &d) const
     {
         return created > d.created;
     }
 
-    XBridgeTransactionDescr & operator = (const XBridgeTransactionDescr & d)
+    XBridgeTransactionDescr &operator = (const XBridgeTransactionDescr &d)
     {
         if (this == &d)
         {
@@ -134,7 +265,11 @@ struct XBridgeTransactionDescr
         return *this;
     }
 
-    XBridgeTransactionDescr(const XBridgeTransactionDescr & d)
+    /**
+     * @brief XBridgeTransactionDescr
+     * @param d
+     */
+    XBridgeTransactionDescr(const XBridgeTransactionDescr &d)
     {
         state   = trNew;
         created = boost::posix_time::second_clock::universal_time();
@@ -143,20 +278,32 @@ struct XBridgeTransactionDescr
         copyFrom(d);
     }
 
-    void updateTimestamp(const XBridgeTransactionDescr & d)
+    /**
+     * @brief updateTimestamp
+     * @param d
+     */
+    void updateTimestamp(const XBridgeTransactionDescr &d)
     {
-        txtime       = boost::posix_time::second_clock::universal_time();
+        txtime = boost::posix_time::second_clock::universal_time();
         if (created > d.created)
         {
             created = d.created;
         }
     }
 
+    /**
+     * @brief isLocal
+     * @return
+     */
     bool isLocal() const
     {
         return from.size() != 0 && to.size() != 0;
     }
 
+    /**
+     * @brief strState
+     * @return
+     */
     std::string strState() const
     {
         switch (state)
@@ -180,7 +327,12 @@ struct XBridgeTransactionDescr
     }
 
 private:
-    void copyFrom(const XBridgeTransactionDescr & d)
+
+    /**
+     * @brief copyFrom
+     * @param d
+     */
+    void copyFrom(const XBridgeTransactionDescr &d)
     {
         id           = d.id;
         role         = d.role;
@@ -225,7 +377,7 @@ private:
 
         updateTimestamp(d);
     }
-};
+};//struct XBridgeTransactionDescr
 
 #endif // XBRIDGETRANSACTIONDESCR
 

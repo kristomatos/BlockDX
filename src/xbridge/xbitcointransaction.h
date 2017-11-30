@@ -21,26 +21,68 @@ typedef std::shared_ptr<CTransaction> CTransactionPtr;
 
 //******************************************************************************
 //******************************************************************************
+/**
+ * @brief The CTransaction class
+ */
 class CTransaction
 {
 public:
-    static const int CURRENT_VERSION=1;
+    /**
+     * @brief CURRENT_VERSION
+     */
+    static const int CURRENT_VERSION = 1;
 
+    /**
+     * @brief nVersion
+     */
     int nVersion;
+
+    /**
+     * @brief nTime
+     */
     unsigned int nTime;
+
+    /**
+     * @brief vin
+     */
     std::vector<CTxIn> vin;
+
+    /**
+     * @brief vout
+     */
     std::vector<CTxOut> vout;
+
+    /**
+     * @brief nLockTime
+     */
     unsigned int nLockTime;
 
     // Denial-of-service detection:
+    /**
+     * @brief nDoS
+     */
     mutable int nDoS;
+
+    /**
+     * @brief DoS
+     * @param nDoSIn
+     * @param fIn
+     * @return
+     */
     bool DoS(int nDoSIn, bool fIn) const { nDoS += nDoSIn; return fIn; }
 
+    /**
+     * @brief CTransaction
+     */
     CTransaction()
     {
         SetNull();
     }
 
+    /**
+     * @brief clone
+     * @return
+     */
     virtual CTransactionPtr clone()
     {
         return CTransactionPtr(new CTransaction(*this));
@@ -48,7 +90,15 @@ public:
 
     ADD_SERIALIZE_METHODS
 
-    template <typename Stream, typename Operation>
+
+    /**
+     * @brief SerializationOp
+     * @param s
+     * @param ser_action
+     * @param nType
+     * @param nVersion
+     */
+    template <typename Stream, typename Operation>    
     inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion)
     {
         READWRITE(this->nVersion);
@@ -59,6 +109,9 @@ public:
         READWRITE(nLockTime);
     }
 
+    /**
+     * @brief SetNull
+     */
     void SetNull()
     {
         nVersion = CTransaction::CURRENT_VERSION;
@@ -69,33 +122,30 @@ public:
         nDoS = 0;  // Denial-of-service prevention
     }
 
+    /**
+     * @brief IsNull
+     * @return
+     */
     bool IsNull() const
     {
         return (vin.empty() && vout.empty());
     }
 
+    /**
+     * @brief GetHash
+     * @return
+     */
     virtual uint256 GetHash() const
     {
         return SerializeHash(*this);
     }
 
-//    bool IsFinal(int nBlockHeight=0, int64 nBlockTime=0) const
-//    {
-//        // Time based nLockTime implemented in 0.1.6
-//        if (nLockTime == 0)
-//            return true;
-//        if (nBlockHeight == 0)
-//            nBlockHeight = nBestHeight;
-//        if (nBlockTime == 0)
-//            nBlockTime = GetAdjustedTime();
-//        if ((int64)nLockTime < ((int64)nLockTime < LOCKTIME_THRESHOLD ? (int64)nBlockHeight : nBlockTime))
-//            return true;
-//        for (const CTxIn & txin : vin)
-//            if (!txin.IsFinal())
-//                return false;
-//        return true;
-//    }
 
+    /**
+     * @brief IsNewerThan
+     * @param old
+     * @return
+     */
     bool IsNewerThan(const CTransaction& old) const
     {
         if (vin.size() != old.vin.size())
@@ -125,17 +175,29 @@ public:
         return fNewer;
     }
 
+    /**
+     * @brief IsCoinBase
+     * @return
+     */
     bool IsCoinBase() const
     {
         return (vin.size() == 1 && vin[0].prevout.IsNull() && vout.size() >= 1);
     }
 
+    /**
+     * @brief IsCoinStake
+     * @return
+     */
     bool IsCoinStake() const
     {
         // ppcoin: the coin stake transaction is marked with the first output empty
         return (vin.size() > 0 && (!vin[0].prevout.IsNull()) && vout.size() >= 2 && vout[0].IsEmpty());
     }
 
+    /**
+     * @brief IsCoinBaseOrStake
+     * @return
+     */
     bool IsCoinBaseOrStake() const
     {
         return (IsCoinBase() || IsCoinStake());
@@ -229,6 +291,12 @@ public:
 //        return true;
 //    }
 
+    /**
+     * @brief operator ==
+     * @param a
+     * @param b
+     * @return
+     */
     friend bool operator==(const CTransaction& a, const CTransaction& b)
     {
         return (a.nVersion  == b.nVersion &&
@@ -238,11 +306,21 @@ public:
                 a.nLockTime == b.nLockTime);
     }
 
+    /**
+     * @brief operator !=
+     * @param a
+     * @param b
+     * @return
+     */
     friend bool operator!=(const CTransaction& a, const CTransaction& b)
     {
         return !(a == b);
     }
 
+    /**
+     * @brief toString
+     * @return
+     */
     virtual std::string toString() const
     {
         CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
@@ -277,6 +355,9 @@ public:
 //        return str;
 //    }
 
+    /**
+     * @brief print
+     */
     void print() const
     {
         // printf("%s", ToString().c_str());
@@ -323,7 +404,7 @@ public:
 
 protected:
 //    const CTxOut& GetOutputFor(const CTxIn& input, const MapPrevTx& inputs) const;
-};
+};//class CTransaction
 
 //******************************************************************************
 //******************************************************************************
@@ -331,14 +412,22 @@ typedef CTransaction CBTCTransaction;
 
 //******************************************************************************
 //******************************************************************************
+/**
+ * @brief The CXCTransaction class
+ */
 class CXCTransaction : public CTransaction
 {
 public:
+    /**
+     * @brief CXCTransaction
+     */
     CXCTransaction() : CTransaction()
-    {
+    {}
 
-    }
-
+    /**
+     * @brief clone
+     * @return
+     */
     virtual CTransactionPtr clone()
     {
         return CTransactionPtr(new CTransaction(*this));
@@ -346,6 +435,13 @@ public:
 
     ADD_SERIALIZE_METHODS
 
+    /**
+     * @brief SerializationOp
+     * @param s
+     * @param ser_action
+     * @param nType
+     * @param nVersion
+     */
     template <typename Stream, typename Operation>
     inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion)
     {
@@ -357,6 +453,12 @@ public:
         READWRITE(nLockTime);
     }
 
+    /**
+     * @brief operator ==
+     * @param a
+     * @param b
+     * @return
+     */
     friend bool operator==(const CXCTransaction& a, const CXCTransaction& b)
     {
         return (a.nVersion  == b.nVersion &&
@@ -366,22 +468,33 @@ public:
                 a.nLockTime == b.nLockTime);
     }
 
+    /**
+     * @brief GetHash
+     * @return
+     */
     virtual uint256 GetHash() const
     {
         return SerializeHash(*this);
     }
 
+    /**
+     * @brief toString
+     * @return
+     */
     virtual std::string toString() const
     {
         CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
         ss << *this;
         return HexStr(ss.begin(), ss.end());
     }
-};
+};//class CXCTransaction
 
 
 //******************************************************************************
 //******************************************************************************
+/**
+ * @brief The CTransactionSignatureSerializer class
+ */
 class CTransactionSignatureSerializer {
 private:
     const CTransaction& txTo;  //!< reference to the spending transaction (the one being serialized)
@@ -392,6 +505,13 @@ private:
     const bool fHashNone;      //!< whether the hashtype is SIGHASH_NONE
 
 public:
+    /**
+     * @brief CTransactionSignatureSerializer
+     * @param txToIn
+     * @param scriptCodeIn
+     * @param nInIn
+     * @param nHashTypeIn
+     */
     CTransactionSignatureSerializer(const CTransaction &txToIn, const CScript &scriptCodeIn, unsigned int nInIn, int nHashTypeIn) :
         txTo(txToIn), scriptCode(scriptCodeIn), nIn(nInIn),
         fAnyoneCanPay(!!(nHashTypeIn & SIGHASH_ANYONECANPAY)),
@@ -399,20 +519,28 @@ public:
         fHashNone((nHashTypeIn & 0x1f) == SIGHASH_NONE) {}
 
     /** Serialize the passed scriptCode, skipping OP_CODESEPARATORs */
+    /**
+     * @brief SerializeScriptCode
+     * @param s
+     */
     template<typename S>
-    void SerializeScriptCode(S &s, int /*nType*/, int /*nVersion*/) const {
+    void SerializeScriptCode(S &s, int /*nType*/, int /*nVersion*/) const
+    {
         CScript::const_iterator it = scriptCode.begin();
         CScript::const_iterator itBegin = it;
         opcodetype opcode;
         unsigned int nCodeSeparators = 0;
-        while (scriptCode.GetOp(it, opcode)) {
+        while (scriptCode.GetOp(it, opcode))
+        {
             if (opcode == OP_CODESEPARATOR)
                 nCodeSeparators++;
         }
         ::WriteCompactSize(s, scriptCode.size() - nCodeSeparators);
         it = itBegin;
-        while (scriptCode.GetOp(it, opcode)) {
-            if (opcode == OP_CODESEPARATOR) {
+        while (scriptCode.GetOp(it, opcode))
+        {
+            if (opcode == OP_CODESEPARATOR)
+            {
                 s.write((char*)&itBegin[0], it-itBegin-1);
                 itBegin = it;
             }
@@ -422,6 +550,13 @@ public:
     }
 
     /** Serialize an input of txTo */
+    /**
+     * @brief SerializeInput
+     * @param s
+     * @param nInput
+     * @param nType
+     * @param nVersion
+     */
     template<typename S>
     void SerializeInput(S &s, unsigned int nInput, int nType, int nVersion) const {
         // In case of SIGHASH_ANYONECANPAY, only the input being signed is serialized
@@ -445,6 +580,13 @@ public:
     }
 
     /** Serialize an output of txTo */
+    /**
+     * @brief SerializeOutput
+     * @param s
+     * @param nOutput
+     * @param nType
+     * @param nVersion
+     */
     template<typename S>
     void SerializeOutput(S &s, unsigned int nOutput, int nType, int nVersion) const {
         if (fHashSingle && nOutput != nIn)
@@ -455,6 +597,12 @@ public:
     }
 
     /** Serialize txTo */
+    /**
+     * @brief Serialize
+     * @param s
+     * @param nType
+     * @param nVersion
+     */
     template<typename S>
     void Serialize(S &s, int nType, int nVersion) const {
         // Serialize nVersion
@@ -472,8 +620,16 @@ public:
         // Serialize nLockTime
         ::Serialize(s, txTo.nLockTime, nType, nVersion);
     }
-};
+};//class CTransactionSignatureSerializer
 
+/**
+ * @brief SignatureHash2
+ * @param scriptCode
+ * @param txTo
+ * @param nIn
+ * @param nHashType
+ * @return
+ */
 uint256 SignatureHash2(const CScript& scriptCode, const CTransactionPtr & txTo, unsigned int nIn, int nHashType/*, const CAmount& amount, SigVersion sigversion, const PrecomputedTransactionData* cache*/);
 
 } // namespace xbridge

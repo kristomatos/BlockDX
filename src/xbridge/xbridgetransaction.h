@@ -23,10 +23,16 @@ typedef boost::shared_ptr<XBridgeTransaction> XBridgeTransactionPtr;
 
 //*****************************************************************************
 //*****************************************************************************
+/**
+ * @brief The XBridgeTransaction class
+ */
 class XBridgeTransaction
 {
 public:
     // see strState when editing
+    /**
+     * @brief The State enum
+     */
     enum State
     {
         trInvalid = 0,
@@ -57,119 +63,415 @@ public:
     };
 
 public:
+    /**
+     * @brief XBridgeTransaction
+     */
     XBridgeTransaction();
-    XBridgeTransaction(const uint256     & id,
-                       const std::string & sourceAddr,
-                       const std::vector<unsigned char> & sourceXAddr,
-                       const std::string & sourceCurrency,
-                       const uint64_t    & sourceAmount,
-                       const std::string & destAddr,
-                       const std::vector<unsigned char> & destXAddr,
-                       const std::string & destCurrency,
-                       const uint64_t    & destAmount);
+
+    /**
+     * @brief XBridgeTransaction
+     * @param id
+     * @param sourceAddr
+     * @param sourceXAddr
+     * @param sourceCurrency
+     * @param sourceAmount
+     * @param destAddr
+     * @param destXAddr
+     * @param destCurrency
+     * @param destAmount
+     */
+    XBridgeTransaction(const uint256 &id,
+                       const std::string &sourceAddr,
+                       const std::vector<unsigned char> &sourceXAddr,
+                       const std::string &sourceCurrency,
+                       const uint64_t &sourceAmount,
+                       const std::string &destAddr,
+                       const std::vector<unsigned char> &destXAddr,
+                       const std::string &destCurrency,
+                       const uint64_t &destAmount);
+
+    /**
+      *
+      * */
     ~XBridgeTransaction();
 
+    /**
+     * @brief id
+     * @return
+     */
     uint256 id() const;
 
-    // state of transaction
-    State state() const;
-    // update state counter and update state
-    State increaseStateCounter(State state, const std::string & from);
 
+    /**
+     * @brief state state of transaction
+     * @return
+     */
+    State state() const;
+
+
+    /**
+     * @brief increaseStateCounter update state counter and update state
+     * @param state
+     * @param from
+     * @return
+     */
+    State increaseStateCounter(State state, const std::string &from);
+
+    /**
+     * @brief strState
+     * @param state
+     * @return
+     */
     static std::string strState(const State state);
+
+    /**
+     * @brief strState
+     * @return
+     */
     std::string strState() const;
 
+    /**
+     * @brief updateTimestamp
+     */
     void updateTimestamp();
+
+    /**
+     * @brief createdTime
+     * @return
+     */
     boost::posix_time::ptime createdTime() const;
 
+    /**
+     * @brief isFinished
+     * @return
+     */
     bool isFinished() const;
+
+    /**
+     * @brief isValid
+     * @return
+     */
     bool isValid() const;
+
+    /**
+     * @brief isExpired
+     * @return
+     */
     bool isExpired() const;
 
+    /**
+     * @brief cancel
+     */
     void cancel();
+
+    /**
+     * @brief drop
+     */
     void drop();
+
+    /**
+     * @brief finish
+     */
     void finish();
 
-    bool confirm(const std::string & id);
+    /**
+     * @brief confirm
+     * @param id
+     * @return
+     */
+    bool confirm(const std::string &id);
 
     // hash of transaction
+    /**
+     * @brief hash1
+     * @return
+     */
     uint256 hash1() const;
+
+    /**
+     * @brief hash2
+     * @return
+     */
     uint256 hash2() const;
 
     // uint256                    firstId() const;
-    std::string                a_address() const;
-    std::vector<unsigned char> a_xaddress() const;
-    std::string                a_destination() const;
-    std::vector<unsigned char> a_xdestination() const;
-    std::string                a_currency() const;
-    uint64_t                   a_amount() const;
-    std::string                a_payTx() const;
-    std::string                a_refTx() const;
-    std::string                a_bintxid() const;
-    std::string                a_innerScript() const;
+    /**
+     * @brief a_address
+     * @return
+     */
+    std::string a_address() const;
 
-    uint256                    a_datatxid() const;
-    xbridge::CPubKey           a_pk1() const;
+    /**
+     * @brief a_xaddress
+     * @return
+     */
+    std::vector<unsigned char> a_xaddress() const;
+
+    /**
+     * @brief a_destination
+     * @return
+     */
+    std::string a_destination() const;
+
+    /**
+     * @brief a_xdestination
+     * @return
+     */
+    std::vector<unsigned char> a_xdestination() const;
+
+    /**
+     * @brief a_currency
+     * @return
+     */
+    std::string a_currency() const;
+
+    /**
+     * @brief a_amount
+     * @return
+     */
+    uint64_t a_amount() const;
+
+    /**
+     * @brief a_payTx
+     * @return
+     */
+    std::string a_payTx() const;
+
+    /**
+     * @brief a_refTx
+     * @return
+     */
+    std::string a_refTx() const;
+
+    /**
+     * @brief a_bintxid
+     * @return
+     */
+    std::string a_bintxid() const;
+
+    /**
+     * @brief a_innerScript
+     * @return
+     */
+    std::string a_innerScript() const;
+
+    /**
+     * @brief a_datatxid
+     * @return
+     */
+    uint256 a_datatxid() const;
+
+    /**
+     * @brief a_pk1
+     * @return
+     */
+    xbridge::CPubKey a_pk1() const;
 
     // uint256                    secondId() const;
-    std::string                b_address() const;
+
+    /**
+     * @brief b_address
+     * @return
+     */
+    std::string b_address() const;
+
+    /**
+     * @brief b_xaddress
+     * @return
+     */
     std::vector<unsigned char> b_xaddress() const;
-    std::string                b_destination() const;
+
+    /**
+     * @brief b_destination
+     * @return
+     */
+    std::string b_destination() const;
+
+    /**
+     * @brief b_xdestination
+     * @return
+     */
     std::vector<unsigned char> b_xdestination() const;
-    std::string                b_currency() const;
-    uint64_t                   b_amount() const;
-    std::string                b_payTx() const;
-    std::string                b_refTx() const;
-    std::string                b_bintxid() const;
-    std::string                b_innerScript() const;
+
+    /**
+     * @brief b_currency
+     * @return
+     */
+    std::string b_currency() const;
+
+    /**
+     * @brief b_amount
+     * @return
+     */
+    uint64_t b_amount() const;
+
+    /**
+     * @brief b_payTx
+     * @return
+     */
+    std::string b_payTx() const;
+
+    /**
+     * @brief b_refTx
+     * @return
+     */
+    std::string b_refTx() const;
+
+    /**
+     * @brief b_bintxid
+     * @return
+     */
+    std::string b_bintxid() const;
+
+    /**
+     * @brief b_innerScript
+     * @return
+     */
+    std::string b_innerScript() const;
 
     // uint256                    b_datatxid() const;
-    xbridge::CPubKey           b_pk1() const;
 
+    /**
+     * @brief b_pk1
+     * @return
+     */
+    xbridge::CPubKey b_pk1() const;
+
+    /**
+     * @brief tryJoin
+     * @param other
+     * @return
+     */
     bool tryJoin(const XBridgeTransactionPtr other);
 
-    bool                       setKeys(const std::string & addr,
-                                       const uint256 & datatxid,
-                                       const xbridge::CPubKey & pk);
-    bool                       setBinTxId(const std::string & addr,
-                                          const std::string & id,
-                                          const std::string & innerScript);
+    /**
+     * @brief setKeys
+     * @param addr
+     * @param datatxid
+     * @param pk
+     * @return
+     */
+    bool setKeys(const std::string &addr,
+                 const uint256 &datatxid,
+                 const xbridge::CPubKey &pk);
+
+    /**
+     * @brief setBinTxId
+     * @param addr
+     * @param id
+     * @param innerScript
+     * @return
+     */
+    bool setBinTxId(const std::string &addr,
+                    const std::string &id,
+                    const std::string &innerScript);
 
 public:
-    boost::mutex               m_lock;
+    /**
+     * @brief m_lock
+     */
+    boost::mutex m_lock;
 
 private:
-    uint256                    m_id;
+    /**
+     * @brief m_id
+     */
+    uint256 m_id;
 
-    boost::posix_time::ptime   m_created;
+    /**
+     * @brief m_created
+     */
+    boost::posix_time::ptime m_created;
 
-    State                      m_state;
+    /**
+     * @brief m_state
+     */
+    State m_state;
 
-    bool                       m_a_stateChanged;
-    bool                       m_b_stateChanged;
+    /**
+     * @brief m_a_stateChanged
+     */
+    bool m_a_stateChanged;
 
-    unsigned int               m_confirmationCounter;
+    /**
+     * @brief m_b_stateChanged
+     */
+    bool m_b_stateChanged;
 
-    std::string                m_sourceCurrency;
-    std::string                m_destCurrency;
+    /**
+     * @brief m_confirmationCounter
+     */
+    unsigned int m_confirmationCounter;
 
-    uint64_t                   m_sourceAmount;
-    uint64_t                   m_destAmount;
+    /**
+     * @brief m_sourceCurrency
+     */
+    std::string m_sourceCurrency;
 
-    std::string                m_bintxid1;
-    std::string                m_bintxid2;
+    /**
+     * @brief m_destCurrency
+     */
+    std::string m_destCurrency;
 
-    std::string                m_innerScript1;
-    std::string                m_innerScript2;
+    /**
+     * @brief m_sourceAmount
+     */
+    uint64_t m_sourceAmount;
 
-    XBridgeTransactionMember   m_a;
-    XBridgeTransactionMember   m_b;
+    /**
+     * @brief m_destAmount
+     */
+    uint64_t m_destAmount;
 
-    uint256                    m_a_datatxid;
-    uint256                    m_b_datatxid;
+    /**
+     * @brief m_bintxid1
+     */
+    std::string m_bintxid1;
 
-    xbridge::CPubKey           m_a_pk1;
-    xbridge::CPubKey           m_b_pk1;
-};
+    /**
+     * @brief m_bintxid2
+     */
+    std::string m_bintxid2;
+
+    /**
+     * @brief m_innerScript1
+     */
+    std::string m_innerScript1;
+
+    /**
+     * @brief m_innerScript2
+     */
+    std::string m_innerScript2;
+
+    /**
+     * @brief m_a
+     */
+    XBridgeTransactionMember m_a;
+
+    /**
+     * @brief m_b
+     */
+    XBridgeTransactionMember m_b;
+
+    /**
+     * @brief m_a_datatxid
+     */
+    uint256 m_a_datatxid;
+
+    /**
+     * @brief m_b_datatxid
+     */
+    uint256 m_b_datatxid;
+
+    /**
+     * @brief m_a_pk1
+     */
+    xbridge::CPubKey m_a_pk1;
+
+    /**
+     * @brief m_b_pk1
+     */
+    xbridge::CPubKey m_b_pk1;
+};//class XBridgeTransaction
 
 #endif // XBRIDGETRANSACTION_H

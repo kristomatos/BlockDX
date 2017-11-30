@@ -13,9 +13,13 @@ namespace xbridge
 
 //*****************************************************************************
 //*****************************************************************************
+/**
+ * @brief The XBitcoinAddress class
+ */
 class XBitcoinAddress : public CBase58Data
 {
 public:
+
     enum
     {
         PUBKEY_ADDRESS = 75,  // XCurrency: address begin with 'X'
@@ -24,13 +28,27 @@ public:
         SCRIPT_ADDRESS_TEST = 196,
     };
 
-    bool Set(const CKeyID &id, const char prefix) {
+    /**
+     * @brief Set
+     * @param id
+     * @param prefix
+     * @return
+     */
+    bool Set(const CKeyID &id, const char prefix)
+    {
         std::vector<unsigned char> pref(1, prefix);
         SetData(pref, id.begin(), id.end());
         return true;
     }
 
-    bool Set(const CScriptID &id, const char prefix) {
+    /**
+     * @brief Set
+     * @param id
+     * @param prefix
+     * @return
+     */
+    bool Set(const CScriptID &id, const char prefix)
+    {
         std::vector<unsigned char> pref(1, prefix);
         SetData(pref, id.begin(), id.end());
         return true;
@@ -41,26 +59,44 @@ public:
 //        return boost::apply_visitor(CBitcoinAddressVisitor(this), dest);
 //    }
 
+    /**
+     * @brief IsValid
+     * @return
+     */
     bool IsValid() const
     {
         unsigned int nExpectedSize = 20;
         return vchData.size() == nExpectedSize;
     }
 
-    XBitcoinAddress()
-    {
-    }
+    /**
+      *
+      **/
+    XBitcoinAddress() = default;
 
+
+    /**
+     * @brief XBitcoinAddress
+     * @param strAddress
+     */
     XBitcoinAddress(const std::string& strAddress)
     {
         SetString(strAddress);
     }
 
+    /**
+     * @brief XBitcoinAddress
+     * @param pszAddress
+     */
     XBitcoinAddress(const char* pszAddress)
     {
         SetString(pszAddress);
     }
 
+    /**
+     * @brief Get
+     * @return
+     */
     CKeyID Get() const
     {
         if (!IsValid())
