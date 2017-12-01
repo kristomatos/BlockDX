@@ -34,7 +34,7 @@ class XBridgeSession
 {
 public:
     /**
-     * @brief XBridgeSession
+     * @brief XBridgeSession - constructor
      */
     XBridgeSession();
 
@@ -240,13 +240,13 @@ protected:
     /**
      * @brief checkPacketAddress
      * @param packet
-     * @return return true if packet not for me, relayed
+     * @return return return true if packet for me and need to process
      */
     bool checkPacketAddress(XBridgePacketPtr packet);
 
     /**
-     * @brief currencyToLog
-     * @return
+     * @brief currencyToLog - make string write to LOG
+     * @return generated string
      */
     virtual std::string currencyToLog() const { return std::string("[") + m_wallet.currency + std::string("]"); }
 
@@ -255,7 +255,7 @@ protected:
      * @param newPKey
      * @return
      */
-    bool makeNewPubKey(xbridge::CPubKey & newPKey) const;
+    bool makeNewPubKey(xbridge::CPubKey &newPKey) const;
 
 
     /**

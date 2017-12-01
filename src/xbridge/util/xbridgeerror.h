@@ -4,6 +4,10 @@
 
 namespace xbridge
 {
+
+    /**
+     * @brief The Error enum
+     */
     enum Error
     {
         // 'NO_ERROR' is defined (probably by some windows headers) when compiling windows targets

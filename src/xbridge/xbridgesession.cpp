@@ -183,7 +183,7 @@ bool XBridgeSession::checkPacketAddress(XBridgePacketPtr packet)
         return true;
     }
 
-    for (const std::vector<unsigned char> & addr : m_addressBook)
+    for (const std::vector<unsigned char> &addr : m_addressBook)
     {
         if (addr.size() != 20)
         {
@@ -2714,7 +2714,7 @@ bool XBridgeSession::processTransactionDropped(XBridgePacketPtr packet)
 
 //******************************************************************************
 //******************************************************************************
-bool XBridgeSession::makeNewPubKey(xbridge::CPubKey & newPKey) const
+bool XBridgeSession::makeNewPubKey(xbridge::CPubKey &newPKey) const
 {
     if (m_wallet.isGetNewPubKeySupported)
     {
