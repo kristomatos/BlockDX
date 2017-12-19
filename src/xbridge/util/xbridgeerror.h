@@ -4,6 +4,7 @@
 
 namespace xbridge
 {
+
     enum Error
     {
         // 'NO_ERROR' is defined (probably by some windows headers) when compiling windows targets
@@ -15,6 +16,8 @@ namespace xbridge
         UNKNOWN_SESSION,
         REVERT_TX_FAILED,
         INVALID_AMOUNT,
+        INVALID_PARAMETERS,
+        INVALID_ADDRESS,
         UNKNOWN_ERROR
     };
 
