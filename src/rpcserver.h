@@ -369,6 +369,7 @@ extern json_spirit::Value dxGetTradeHistory(const json_spirit::Array& params, bo
  */
 extern json_spirit::Value dxGetOrderBook(const json_spirit::Array& params, bool fHelp);
 
+extern json_spirit::Value dxrollbackTransaction(const json_spirit::Array& params, bool fHelp);
 /** @} */
 
 
