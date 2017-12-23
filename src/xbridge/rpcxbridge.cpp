@@ -478,7 +478,7 @@ Value dxCreateTransaction(const Array &params, bool fHelp)
           (fromAddress, fromCurrency, xBridgeAmountFromReal(fromAmount),
            toAddress, toCurrency, xBridgeAmountFromReal(toAmount), id);
 
-    if(statusCode== xbridge::SUCCESS) {
+    if(statusCode == xbridge::SUCCESS) {
         Object obj;
         obj.emplace_back(Pair("id",             id.GetHex()));
         obj.emplace_back(Pair("from",           fromAddress));
@@ -665,7 +665,6 @@ json_spirit::Value dxGetOrderBook(const json_spirit::Array& params, bool fHelp)
         return  error;
     }
 
-
     Object res;
     TransactionMap trList;
     {
@@ -777,7 +776,7 @@ json_spirit::Value dxGetOrderBook(const json_spirit::Array& params, bool fHelp)
                 return priceA < priceB;
             });
 
-            {
+            if(bidsItem != bidsList.end()) {
                 const auto &tr = bidsItem->second;
                 if(tr != nullptr) {
                     const auto bidPrice = xBridgeValueFromAmount(tr->fromAmount) / xBridgeValueFromAmount(tr->toAmount);
@@ -800,7 +799,7 @@ json_spirit::Value dxGetOrderBook(const json_spirit::Array& params, bool fHelp)
                 return priceA < priceB;
             });
 
-            {
+            if(asksItem != asksList.end() ) {
                 const auto &tr = asksItem->second;
                 if(tr != nullptr) {
                     const auto askPrice = xBridgeValueFromAmount(tr->fromAmount) / xBridgeValueFromAmount(tr->toAmount);
@@ -912,7 +911,6 @@ json_spirit::Value dxGetOrderBook(const json_spirit::Array& params, bool fHelp)
                 tmp.emplace_back(xBridgeValueFromAmount(tr->fromAmount));
                 tmp.emplace_back(tr->id.GetHex());
                 bids.emplace_back(tmp);
-
             }
             for (const auto &tr : asksVector) {
                 Array tmp;
