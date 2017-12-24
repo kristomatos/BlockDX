@@ -49,24 +49,39 @@ private:
 
     // static_assert(sizeof(vch) == 32, "vch must be 32 bytes in length to not break serialization");
 
-    //! Check whether the 32-byte array pointed to be vch is valid keydata.
+
+    /**
+     * @brief Check Check whether the 32-byte array pointed to be vch is valid keydata.
+     * @param vch
+     * @return
+     */
     bool static Check(const unsigned char* vch);
 
 public:
-    //! Construct an invalid private key.
+
+    /**
+     * @brief CKey Construct an invalid private key.
+     */
     CKey() : fValid(false), fCompressed(false)
     {
         // LockObject(vch);
     }
 
-    //! Copy constructor. This is necessary because of memlocking.
+
+    /**
+     * @brief CKey Copy constructor. This is necessary because of memlocking.
+     * @param secret
+     */
     CKey(const CKey& secret) : fValid(secret.fValid), fCompressed(secret.fCompressed)
     {
         // LockObject(vch);
         memcpy(vch, secret.vch, sizeof(vch));
     }
 
-    //! Destructor (again necessary because of memlocking).
+
+    /**
+      *Destructor (again necessary because of memlocking).
+      * */
     ~CKey()
     {
         // UnlockObject(vch);
@@ -79,7 +94,14 @@ public:
             memcmp(&a.vch[0], &b.vch[0], a.size()) == 0;
     }
 
-    //! Initialize using begin and end iterators to byte data.
+
+    /**
+     * @brief Set Initialize using begin and end iterators to byte data.
+     * @param pbegin
+     * @param pend
+     * @param fCompressedIn
+     */
+
     template <typename T>
     void Set(const T pbegin, const T pend, bool fCompressedIn)
     {
@@ -99,55 +121,99 @@ public:
     const unsigned char* begin() const { return vch; }
     const unsigned char* end() const { return vch + size(); }
 
-    //! Check whether this private key is valid.
+
+    /**
+     * @brief IsValid Check whether this private key is valid.
+     * @return
+     */
     bool IsValid() const { return fValid; }
 
-    //! Check whether the public key corresponding to this private key is (to be) compressed.
+
+    /**
+     * @brief IsCompressed
+     * @return  Check whether the public key corresponding to this private key is (to be) compressed.
+     */
     bool IsCompressed() const { return fCompressed; }
 
-    //! Initialize from a CPrivKey (serialized OpenSSL private key data).
+
+    /**
+     * @brief SetPrivKey Initialize from a CPrivKey (serialized OpenSSL private key data).
+     * @param vchPrivKey
+     * @param fCompressed
+     * @return
+     */
     bool SetPrivKey(const CPrivKey& vchPrivKey, bool fCompressed);
 
-    //! Generate a new private key using a cryptographic PRNG.
+
+    /**
+     * @brief MakeNewKey Generate a new private key using a cryptographic PRNG.
+     * @param fCompressed
+     */
     void MakeNewKey(bool fCompressed);
 
     /**
-     * Convert the private key to a CPrivKey (serialized OpenSSL private key data).
+     * @brief GetPrivKey Convert the private key to a CPrivKey (serialized OpenSSL private key data).
      * This is expensive.
+     * @return
      */
     CPrivKey GetPrivKey() const;
 
     /**
-     * Compute the public key from a private key.
+     * @brief GetPubKey Compute the public key from a private key.
      * This is expensive.
+     * @return
      */
     CPubKey GetPubKey() const;
 
     /**
-     * Create a DER-serialized signature.
+     * @brief Sign Create a DER-serialized signature.
      * The test_case parameter tweaks the deterministic nonce.
+     * @param hash
+     * @param vchSig
+     * @param test_case
+     * @return
      */
     bool Sign(const uint256& hash, std::vector<unsigned char>& vchSig, uint32_t test_case = 0) const;
 
     /**
-     * Create a compact signature (65 bytes), which allows reconstructing the used public key.
+     * @brief SignCompact Create a compact signature (65 bytes), which allows reconstructing the used public key.
      * The format is one header byte, followed by two times 32 bytes for the serialized r and s values.
      * The header byte: 0x1B = first key with even y, 0x1C = first key with odd y,
      *                  0x1D = second key with even y, 0x1E = second key with odd y,
      *                  add 0x04 for compressed keys.
+     * @param hash
+     * @param vchSig
+     * @return
      */
     bool SignCompact(const uint256& hash, std::vector<unsigned char>& vchSig) const;
 
-    //! Derive BIP32 child key.
+
+    /**
+     * @brief Derive Derive BIP32 child key.
+     * @param keyChild
+     * @param ccChild
+     * @param nChild
+     * @param cc
+     * @return
+     */
     bool Derive(CKey& keyChild, ChainCode &ccChild, unsigned int nChild, const ChainCode& cc) const;
 
     /**
-     * Verify thoroughly whether a private key and a public key match.
+     * @brief VerifyPubKey Verify thoroughly whether a private key and a public key match.
      * This is done using a different mechanism than just regenerating it.
+     * @param vchPubKey
+     * @return
      */
     bool VerifyPubKey(const CPubKey& vchPubKey) const;
 
-    //! Load private key and check that public key matches.
+
+    /**
+     * @brief Load Load private key and check that public key matches.
+     * @param privkey
+     * @param vchPubKey
+     * @param fSkipCheck
+     * @return
+     */
     bool Load(CPrivKey& privkey, CPubKey& vchPubKey, bool fSkipCheck);
 };
 
@@ -191,13 +257,22 @@ struct CExtKey {
     }
 };
 
-/** Initialize the elliptic curve support. May not be called twice without calling ECC_Stop first. */
+
+/**
+ * @brief ECC_Start Initialize the elliptic curve support. May not be called twice without calling ECC_Stop first.
+ */
 void ECC_Start(void);
 
-/** Deinitialize the elliptic curve support. No-op if ECC_Start wasn't called first. */
+
+/**
+ * @brief ECC_Stop Deinitialize the elliptic curve support. No-op if ECC_Start wasn't called first.
+ */
 void ECC_Stop(void);
 
-/** Check that required EC support is available at runtime. */
+/**
+ * @brief ECC_InitSanityCheck Check that required EC support is available at runtime.
+ * @return
+ */
 bool ECC_InitSanityCheck(void);
 
 } // namespace xbridge

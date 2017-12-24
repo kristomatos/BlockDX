@@ -58,45 +58,122 @@ public:
     };
 
 public:
+    /**
+     * @brief Transaction
+     */
     Transaction();
+    /**
+     * @brief Transaction
+     * @param id
+     * @param sourceAddr
+     * @param sourceCurrency
+     * @param sourceAmount
+     * @param destAddr
+     * @param destCurrency
+     * @param destAmount
+     */
     Transaction(const uint256                    & id,
-                       const std::vector<unsigned char> & sourceAddr,
-                       const std::string                & sourceCurrency,
-                       const uint64_t                   & sourceAmount,
-                       const std::vector<unsigned char> & destAddr,
-                       const std::string                & destCurrency,
-                       const uint64_t                   & destAmount);
+                const std::vector<unsigned char> & sourceAddr,
+                const std::string                & sourceCurrency,
+                const uint64_t                   & sourceAmount,
+                const std::vector<unsigned char> & destAddr,
+                const std::string                & destCurrency,
+                const uint64_t                   & destAmount);
     ~Transaction();
 
+    /**
+     * @brief id
+     * @return id of transaction
+     */
     uint256 id() const;
 
-    // state of transaction
+
+    /**
+     * @brief state
+     * @return state of transaction
+     */
     State state() const;
-    // update state counter and update state
+
+    /**
+     * @brief increaseStateCounter update state counter and update state
+     * @param state
+     * @param from
+     * @return new state of transaction
+     */
     State increaseStateCounter(const State state, const std::vector<unsigned char> & from);
 
     static std::string strState(const State state);
+    /**
+     * @brief strState
+     * @return string description transaction
+     */
     std::string strState() const;
 
+    /**
+     * @brief updateTimestamp - update creation time of transaction
+     */
     void updateTimestamp();
+    /**
+     * @brief createdTime
+     * @return the creation time of transaction
+     */
     boost::posix_time::ptime createdTime() const;
 
+    /**
+     * @brief isFinished
+     * @return
+     */
     bool isFinished() const;
+    /**
+     * @brief isValid
+     * @return
+     */
     bool isValid() const;
+    /**
+     * @brief isExpired
+     * @return
+     */
     bool isExpired() const;
 
+    /**
+     * @brief cancel
+     */
     void cancel();
+    /**
+     * @brief drop
+     */
     void drop();
+    /**
+     * @brief finish
+     */
     void finish();
 
+    /**
+     * @brief confirm
+     * @param id
+     * @return
+     */
     bool confirm(const std::string & id);
 
     // hash of transaction
+    /**
+     * @brief hash1
+     * @return hash of transaction
+     */
     uint256 hash1() const;
+    /**
+     * @brief hash2
+     * @return hash of transaction
+     */
     uint256 hash2() const;
 
     // uint256                    firstId() const;
+    /**
+     * @brief a_address
+     * @return address of source
+     */
     std::vector<unsigned char> a_address() const;
+
     std::vector<unsigned char> a_destination() const;
     std::string                a_currency() const;
     uint64_t                   a_amount() const;

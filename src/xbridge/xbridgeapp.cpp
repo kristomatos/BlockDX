@@ -62,17 +62,45 @@ class App::Impl
     };
 
 protected:
+    /**
+     * @brief Impl - constructor, init timer and threads
+     */
     Impl();
 
+    /**
+     * @brief start
+     * @return
+     */
     bool start();
+    /**
+     * @brief stop
+     * @return
+     */
     bool stop();
 
 protected:
+    /**
+     * @brief onSend
+     * @param id
+     * @param message
+     */
     void onSend(const std::vector<unsigned char> & id, const std::vector<unsigned char> & message);
 
+    /**
+     * @brief onTimer
+     */
     void onTimer();
 
+    /**
+     * @brief getSession
+     * @return
+     */
     SessionPtr getSession();
+    /**
+     * @brief getSession
+     * @param address
+     * @return
+     */
     SessionPtr getSession(const std::vector<unsigned char> & address);
 
 protected:

@@ -24,28 +24,75 @@ namespace xbridge
 
 //*****************************************************************************
 //*****************************************************************************
+/**
+ * @brief The Exchange class
+ */
 class Exchange
 {
     class Impl;
 
 public:
+    /**
+     * @brief instance
+     * @return
+     */
     static Exchange & instance();
 
 protected:
+    /**
+     * @brief Exchange - default constructor
+     */
     Exchange();
+    /**
+      * destructor
+      * */
     ~Exchange();
 
 public:
+    /**
+     * @brief init
+     * @return
+     */
     bool init();
 
+    /**
+     * @brief isEnabled
+     * @return true, if servicenode mode enabled
+     */
     bool isEnabled();
+    /**
+     * @brief isStarted
+     * @return true, if is enabled and servicenode started
+     */
     bool isStarted();
 
+    /**
+     * @brief haveConnectedWallet
+     * @param walletName - name of wallet
+     * @return true, if connection with wallet
+     */
     bool haveConnectedWallet(const std::string & walletName);
+    /**
+     * @brief connectedWallets
+     * @return list of connected wallets
+     */
     std::vector<std::string> connectedWallets() const;
 
     // std::vector<unsigned char> walletAddress(const std::string & walletName);
 
+    /**
+     * @brief createTransaction
+     * @param id
+     * @param sourceAddr
+     * @param sourceCurrency
+     * @param sourceAmount
+     * @param destAddr
+     * @param destCurrency
+     * @param destAmount
+     * @param pendingId
+     * @param isCreated
+     * @return
+     */
     bool createTransaction(const uint256                    & id,
                            const std::vector<unsigned char> & sourceAddr,
                            const std::string                & sourceCurrency,
@@ -56,6 +103,18 @@ public:
                            uint256                          & pendingId,
                            bool                             & isCreated);
 
+    /**
+     * @brief acceptTransaction
+     * @param id
+     * @param sourceAddr
+     * @param sourceCurrency
+     * @param sourceAmount
+     * @param destAddr
+     * @param destCurrency
+     * @param destAmount
+     * @param transactionId
+     * @return
+     */
     bool acceptTransaction(const uint256                    & id,
                            const std::vector<unsigned char> & sourceAddr,
                            const std::string                & sourceCurrency,
@@ -65,8 +124,23 @@ public:
                            const uint64_t                   & destAmount,
                            uint256                          & transactionId);
 
+    /**
+     * @brief deletePendingTransactions
+     * @param id
+     * @return
+     */
     bool deletePendingTransactions(const uint256 & id);
+    /**
+     * @brief deletePendingTransactionsByTransactionId
+     * @param id
+     * @return
+     */
     bool deletePendingTransactionsByTransactionId(const uint256 & id);
+    /**
+     * @brief deleteTransaction
+     * @param id
+     * @return
+     */
     bool deleteTransaction(const uint256 & id);
 
     bool updateTransactionWhenHoldApplyReceived(const TransactionPtr & tx,

@@ -49,12 +49,27 @@ public:
 
 public:
     // reimplement for currency
+    /**
+     * @brief fromXAddr
+     * @param xaddr
+     * @return
+     */
     virtual std::string fromXAddr(const std::vector<unsigned char> & xaddr) const = 0;
+    /**
+     * @brief toXAddr
+     * @param addr
+     * @return
+     */
     virtual std::vector<unsigned char> toXAddr(const std::string & addr) const = 0;
 
 public:
     // wallet RPC
 
+    /**
+     * @brief requestAddressBook
+     * @param entries
+     * @return
+     */
     virtual bool requestAddressBook(std::vector<wallet::AddressBookEntry> & entries) = 0;
 
     virtual bool getUnspent(std::vector<wallet::UtxoEntry> & inputs) const = 0;
