@@ -18,14 +18,26 @@ typedef boost::shared_ptr<TransactionDescr> TransactionDescrPtr;
 class XUIConnector
 {
 public:
+    /**
+     * @brief NotifyXBridgeTransactionReceived
+     */
     boost::signals2::signal<void (const xbridge::TransactionDescrPtr & tx)> NotifyXBridgeTransactionReceived;
 
+    /**
+     * @brief NotifyXBridgeTransactionStateChanged
+     */
     boost::signals2::signal<void (const uint256 & id)> NotifyXBridgeTransactionStateChanged;
 
+    /**
+     * @brief NotifyXBridgeAddressBookEntryReceived
+     */
     boost::signals2::signal<void (const std::string & currency,
                                   const std::string & name,
                                   const std::string & address)> NotifyXBridgeAddressBookEntryReceived;
 
+    /**
+     * @brief NotifyLogMessage
+     */
     boost::signals2::signal<void (const std::string str)> NotifyLogMessage;
 };
 

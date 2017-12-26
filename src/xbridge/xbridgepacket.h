@@ -17,6 +17,9 @@
 
 //******************************************************************************
 //******************************************************************************
+/**
+ * @brief The TxCancelReason enum
+ */
 enum TxCancelReason
 {
     crUnknown         = 0,
@@ -39,6 +42,9 @@ enum TxCancelReason
 
 //******************************************************************************
 //******************************************************************************
+/**
+ * @brief The XBridgeCommand enum
+ */
 enum XBridgeCommand
 {
     xbcInvalid = 0,
@@ -273,8 +279,14 @@ typedef uint32_t crc_t;
 // boost::uint32_t rezerved
 // boost::uint32_t rezerved
 //******************************************************************************
+/**
+ * @brief The XBridgePacket class
+ */
 class XBridgePacket
 {
+    /**
+     * @brief m_body
+     */
     std::vector<unsigned char> m_body;
 
 public:
@@ -285,9 +297,21 @@ public:
         timestampSize = sizeof(uint32_t)
     };
 
+    /**
+     * @brief size
+     * @return
+     */
     uint32_t     size()    const     { return sizeField(); }
+    /**
+     * @brief allSize
+     * @return
+     */
     uint32_t     allSize() const     { return static_cast<uint32_t>(m_body.size()); }
 
+    /**
+     * @brief crc
+     * @return
+     */
     crc_t        crc()     const
     {
         // TODO implement this
@@ -296,19 +320,45 @@ public:
         // return crcField();
     }
 
+    /**
+     * @brief version
+     * @return
+     */
     uint32_t version() const       { return versionField(); }
 
+    /**
+     * @brief command
+     * @return
+     */
     XBridgeCommand  command() const       { return static_cast<XBridgeCommand>(commandField()); }
 
+    /**
+     * @brief alloc
+     */
     void    alloc()                       { m_body.resize(headerSize + size()); }
 
+    /**
+     * @brief body
+     * @return
+     */
     const std::vector<unsigned char> & body() const
                                           { return m_body; }
+    /**
+     * @brief header
+     * @return
+     */
     unsigned char  * header()             { return &m_body[0]; }
+    /**
+     * @brief data
+     * @return
+     */
     unsigned char  * data()               { return &m_body[headerSize]; }
 
     // boost::int32_t int32Data() const { return field32<2>(); }
 
+    /**
+     * @brief clear
+     */
     void    clear()
     {
         m_body.resize(headerSize);
@@ -319,12 +369,20 @@ public:
         // crcField() = 0;
     }
 
+    /**
+     * @brief resize
+     * @param size
+     */
     void resize(const uint32_t size)
     {
         m_body.resize(size+headerSize);
         sizeField() = size;
     }
 
+    /**
+     * @brief setData
+     * @param data
+     */
     void    setData(const unsigned char data)
     {
         m_body.resize(sizeof(data) + headerSize);
@@ -332,6 +390,10 @@ public:
         m_body[headerSize] = data;
     }
 
+    /**
+     * @brief setData
+     * @param data
+     */
     void    setData(const int32_t data)
     {
         m_body.resize(sizeof(data) + headerSize);
@@ -339,6 +401,10 @@ public:
         field32<2>() = data;
     }
 
+    /**
+     * @brief setData
+     * @param data
+     */
     void    setData(const std::string & data)
     {
         m_body.resize(data.size() + headerSize);
@@ -349,11 +415,22 @@ public:
         }
     }
 
+    /**
+     * @brief setData
+     * @param data
+     * @param offset
+     */
     void    setData(const std::vector<unsigned char> & data, const unsigned int offset = 0)
     {
         setData(&data[0], static_cast<uint32_t>(data.size()), offset);
     }
 
+    /**
+     * @brief setData
+     * @param data
+     * @param size
+     * @param offset
+     */
     void    setData(const unsigned char * data, const uint32_t size, const uint32_t offset = 0)
     {
         unsigned int off = offset + headerSize;
@@ -377,6 +454,10 @@ public:
 //        sizeField() = static_cast<uint32_t>(m_body.size()) - headerSize;
 //    }
 
+    /**
+     * @brief append
+     * @param data
+     */
     void append(const uint16_t data)
     {
         m_body.reserve(m_body.size() + sizeof(data));
@@ -385,6 +466,10 @@ public:
         sizeField() = static_cast<uint32_t>(m_body.size()) - headerSize;
     }
 
+    /**
+     * @brief append
+     * @param data
+     */
     void append(const uint32_t data)
     {
         m_body.reserve(m_body.size() + sizeof(data));
@@ -393,6 +478,10 @@ public:
         sizeField() = static_cast<uint32_t>(m_body.size()) - headerSize;
     }
 
+    /**
+     * @brief append
+     * @param data
+     */
     void append(const uint64_t data)
     {
         m_body.reserve(m_body.size() + sizeof(data));
@@ -401,6 +490,11 @@ public:
         sizeField() = static_cast<uint32_t>(m_body.size()) - headerSize;
     }
 
+    /**
+     * @brief append
+     * @param data
+     * @param size
+     */
     void append(const unsigned char * data, const int size)
     {
         m_body.reserve(m_body.size() + size);
@@ -408,6 +502,10 @@ public:
         sizeField() = static_cast<uint32_t>(m_body.size()) - headerSize;
     }
 
+    /**
+     * @brief append
+     * @param data
+     */
     void append(const std::string & data)
     {
         m_body.reserve(m_body.size() + data.size()+1);
@@ -416,6 +514,10 @@ public:
         sizeField() = static_cast<uint32_t>(m_body.size()) - headerSize;
     }
 
+    /**
+     * @brief append
+     * @param data
+     */
     void append(const std::vector<unsigned char> & data)
     {
         m_body.reserve(m_body.size() + data.size());
@@ -423,6 +525,11 @@ public:
         sizeField() = static_cast<uint32_t>(m_body.size()) - headerSize;
     }
 
+    /**
+     * @brief copyFrom
+     * @param data
+     * @return
+     */
     bool copyFrom(const std::vector<unsigned char> & data)
     {
         m_body = data;
@@ -438,22 +545,37 @@ public:
         return true;
     }
 
+    /**
+     * @brief XBridgePacket
+     */
     XBridgePacket() : m_body(headerSize, 0)
     {
         versionField()   = static_cast<uint32_t>(XBRIDGE_PROTOCOL_VERSION);
         timestampField() = static_cast<uint32_t>(time(0));
     }
 
+    /**
+     * @brief XBridgePacket
+     * @param raw
+     */
     explicit XBridgePacket(const std::string& raw) : m_body(raw.begin(), raw.end())
     {
         timestampField() = static_cast<uint32_t>(time(0));
     }
 
+    /**
+     * @brief XBridgePacket
+     * @param other
+     */
     XBridgePacket(const XBridgePacket & other)
     {
         m_body = other.m_body;
     }
 
+    /**
+     * @brief XBridgePacket
+     * @param c
+     */
     XBridgePacket(XBridgeCommand c) : m_body(headerSize, 0)
     {
         versionField()   = static_cast<uint32_t>(XBRIDGE_PROTOCOL_VERSION);
@@ -461,6 +583,11 @@ public:
         timestampField() = static_cast<uint32_t>(time(0));
     }
 
+    /**
+     * @brief operator =
+     * @param other
+     * @return
+     */
     XBridgePacket & operator = (const XBridgePacket & other)
     {
         m_body    = other.m_body;
@@ -469,23 +596,71 @@ public:
     }
 
 private:
+    /**
+     * @brief field32
+     * @return
+     */
     template<uint32_t INDEX>
     uint32_t & field32()
         { return *static_cast<uint32_t *>(static_cast<void *>(&m_body[INDEX * 4])); }
 
+    /**
+     * @brief field32
+     * @return
+     */
     template<uint32_t INDEX>
     uint32_t const& field32() const
         { return *static_cast<uint32_t const*>(static_cast<void const*>(&m_body[INDEX * 4])); }
 
+    /**
+     * @brief versionField
+     * @return
+     */
     uint32_t       & versionField()         { return field32<0>(); }
+    /**
+     * @brief versionField
+     * @return
+     */
     uint32_t const & versionField() const   { return field32<0>(); }
+    /**
+     * @brief commandField
+     * @return
+     */
     uint32_t &       commandField()         { return field32<1>(); }
+    /**
+     * @brief commandField
+     * @return
+     */
     uint32_t const & commandField() const   { return field32<1>(); }
+    /**
+     * @brief timestampField
+     * @return
+     */
     uint32_t &       timestampField()       { return field32<2>(); }
+    /**
+     * @brief timestampField
+     * @return
+     */
     uint32_t const & timestampField() const { return field32<2>(); }
+    /**
+     * @brief sizeField
+     * @return
+     */
     uint32_t &       sizeField()            { return field32<3>(); }
+    /**
+     * @brief sizeField
+     * @return
+     */
     uint32_t const & sizeField() const      { return field32<3>(); }
+    /**
+     * @brief crcField
+     * @return
+     */
     uint32_t &       crcField()             { return field32<4>(); }
+    /**
+     * @brief crcField
+     * @return
+     */
     uint32_t const & crcField() const       { return field32<4>(); }
 };
 

@@ -29,6 +29,9 @@ namespace xbridge
 
 //*****************************************************************************
 //*****************************************************************************
+/**
+ * @brief The Session class
+ */
 class Session
         : public std::enable_shared_from_this<Session>
         , private boost::noncopyable
@@ -36,23 +39,58 @@ class Session
     class Impl;
 
 public:
+    /**
+     * @brief Session
+     */
     Session();
+    /**
+      * @brief ~Session
+      * */
     ~Session();
 
+    /**
+     * @brief sessionAddr
+     * @return
+     */
     const std::vector<unsigned char> & sessionAddr() const;
 
+    /**
+     * @brief checkXBridgePacketVersion
+     * @param packet
+     * @return
+     */
     static bool checkXBridgePacketVersion(XBridgePacketPtr packet);
 
+    /**
+     * @brief processPacket
+     * @param packet
+     * @return
+     */
     bool processPacket(XBridgePacketPtr packet);
 
 public:
     // service functions
+    /**
+     * @brief sendListOfTransactions
+     */
     void sendListOfTransactions();
+    /**
+     * @brief checkFinishedTransactions
+     */
     void checkFinishedTransactions();
+    /**
+     * @brief eraseExpiredPendingTransactions
+     */
     void eraseExpiredPendingTransactions();
+    /**
+     * @brief getAddressBook
+     */
     void getAddressBook();
 
 private:
+    /**
+     * @brief init
+     */
     void init();
 
 private:

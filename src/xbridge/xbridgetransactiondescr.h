@@ -27,6 +27,9 @@ struct TransactionDescr
         COIN = 1000000
     };
 
+    /**
+     * @brief The State enum
+     */
     enum State
     {
         trExpired = -1,
@@ -47,59 +50,155 @@ struct TransactionDescr
         trInvalid
     };
 
+    /**
+     * @brief id
+     */
     uint256                    id;
 
+    /**
+     * @brief role
+     */
     char                       role;
 
+    /**
+     * @brief hubAddress
+     */
     std::vector<unsigned char> hubAddress;
+    /**
+     * @brief confirmAddress
+     */
     std::vector<unsigned char> confirmAddress;
 
+    /**
+     * @brief from - from address
+     */
     std::vector<unsigned char> from;
+    /**
+     * @brief fromCurrency - from currency
+     */
     std::string                fromCurrency;
+    /**
+     * @brief fromAmount - from amount
+     */
     uint64_t                   fromAmount;
+    /**
+     * @brief to - to address
+     */
     std::vector<unsigned char> to;
+    /**
+     * @brief toCurrency - to currency
+     */
     std::string                toCurrency;
+    /**
+     * @brief toAmount - to amount
+     */
     uint64_t                   toAmount;
 
+    /**
+     * @brief tax
+     */
     uint32_t                   tax;
 
+    /**
+     * @brief lockTimeTx1 - time of lock
+     */
     uint32_t                   lockTimeTx1;
+    /**
+     * @brief lockTimeTx2
+     */
     uint32_t                   lockTimeTx2;
 
+    /**
+     * @brief state - status of transaction
+     */
     State                      state;
+    /**
+     * @brief reason
+     */
     uint32_t                   reason;
 
+    /**
+     * @brief created - time of creation transaction
+     */
     boost::posix_time::ptime   created;
+    /**
+     * @brief txtime - time of last transaction update
+     */
     boost::posix_time::ptime   txtime;
 
-    // raw bitcoin transactions
+
+    /**
+     * @brief binTxId raw bitcoin transactions
+     */
     std::string                binTxId;
+    /**
+     * @brief binTx
+     */
     std::string                binTx;
+    /**
+     * @brief payTxId
+     */
     std::string                payTxId;
+    /**
+     * @brief payTx
+     */
     std::string                payTx;
+    /**
+     * @brief refTxId
+     */
     std::string                refTxId;
+    /**
+     * @brief refTx
+     */
     std::string                refTx;
 
-    // multisig address and redeem script
+
+    /**
+     * @brief depositP2SH multisig address and redeem script
+     */
     std::string                depositP2SH;
+    /**
+     * @brief innerScript
+     */
     std::vector<unsigned char> innerScript;
 
     // prevtxs for signrawtransaction
     // std::string                prevtxs;
 
+    /**
+     * @brief packet
+     */
     XBridgePacketPtr           packet;
 
-    // local created key (for exchange)
+    //
+    /**
+     * @brief mPubKey local created key (for exchange)
+     */
     std::vector<unsigned char>    mPubKey;
+    /**
+     * @brief mPrivKey
+     */
     std::vector<unsigned char>    mPrivKey;
 
-    // X key (secret data)
+
+    /**
+     * @brief xPubKey X key (secret data)
+     */
     std::vector<unsigned char>    xPubKey;
+    /**
+     * @brief xPrivKey
+     */
     std::vector<unsigned char>    xPrivKey;
 
     // used coins in transaction
+    /**
+     * @brief usedCoins
+     */
     std::vector<xbridge::wallet::UtxoEntry> usedCoins;
 
+    /**
+     * @brief TransactionDescr  - default constructor
+     */
     TransactionDescr()
         : role(0)
         , tax(0)
@@ -138,6 +237,10 @@ struct TransactionDescr
         return *this;
     }
 
+    /**
+     * @brief TransactionDescr - copy constructor
+     * @param d
+     */
     TransactionDescr(const TransactionDescr & d)
     {
         state   = trNew;
@@ -147,11 +250,18 @@ struct TransactionDescr
         copyFrom(d);
     }
 
+    /**
+     * @brief updateTimestamp - update timestamp of transaction
+     */
     void updateTimestamp()
     {
         txtime       = boost::posix_time::second_clock::universal_time();
     }
 
+    /**
+     * @brief updateTimestamp - update timestamp of transaction
+     * @param d - other transaction
+     */
     void updateTimestamp(const TransactionDescr & d)
     {
         txtime       = boost::posix_time::second_clock::universal_time();
@@ -161,11 +271,19 @@ struct TransactionDescr
         }
     }
 
+    /**
+     * @brief isLocal
+     * @return true, if client is owner of transaction
+     */
     bool isLocal() const
     {
         return from.size() != 0 && to.size() != 0;
     }
 
+    /**
+     * @brief strState
+     * @return string description  transaction status
+     */
     std::string strState() const
     {
         switch (state)
@@ -189,6 +307,10 @@ struct TransactionDescr
     }
 
 private:
+    /**
+     * @brief copyFrom
+     * @param d
+     */
     void copyFrom(const TransactionDescr & d)
     {
         id           = d.id;

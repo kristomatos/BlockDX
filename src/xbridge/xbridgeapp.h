@@ -55,8 +55,18 @@ public:
      */
     static std::string version();
 
+    /**
+     * @brief isEnabled
+     * @return
+     */
     static bool isEnabled();
 
+    /**
+     * @brief init
+     * @param argc
+     * @param argv
+     * @return
+     */
     bool init(int argc, char *argv[]);
 
     /**
@@ -241,7 +251,16 @@ public:
     void addToKnown(const std::vector<unsigned char> & message);
 
     // send message via xbridge
+    /**
+     * @brief sendPacket
+     * @param packet
+     */
     void sendPacket(const XBridgePacketPtr & packet);
+    /**
+     * @brief sendPacket
+     * @param id
+     * @param packet
+     */
     void sendPacket(const std::vector<unsigned char> & id, const XBridgePacketPtr & packet);
 
 
@@ -254,7 +273,7 @@ public:
     void onMessageReceived(const std::vector<unsigned char> & id,
                            const std::vector<unsigned char> & message,
                            CValidationState & state);
-    //
+
     /**
      * @brief onBroadcastReceived broadcast message
      * @param message
@@ -270,6 +289,7 @@ public:
      * @return
      */
     bool processLater(const uint256 & txid, const XBridgePacketPtr & packet);
+
     /**
      * @brief removePackets
      * @param txid
@@ -286,12 +306,14 @@ public:
      * @return
      */
     bool checkUtxoItems(const std::vector<wallet::UtxoEntry> & items);
+
     /**
      * @brief lockUtxoItems
      * @param items
      * @return
      */
     bool lockUtxoItems(const std::vector<wallet::UtxoEntry> & items);
+
     /**
      * @brief txOutIsLocked
      * @param entry

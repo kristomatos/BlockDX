@@ -41,18 +41,25 @@ const unsigned int BIP32_EXTKEY_SIZE = 74;
 
 typedef uint256 ChainCode;
 
-/** An encapsulated public key. */
+
+/**
+ * @brief The CPubKey class An encapsulated public key.
+ */
 class CPubKey
 {
 private:
 
     /**
-     * Just store the serialized data.
+     * @brief vch Just store the serialized data.
      * Its length can very cheaply be computed from the first byte.
      */
     unsigned char vch[65];
 
-    //! Compute the length of a pubkey with a given first byte.
+    /**
+     * @brief GetLen Compute the length of a pubkey with a given first byte.
+     * @param chHeader
+     * @return
+     */
     unsigned int static GetLen(unsigned char chHeader)
     {
         if (chHeader == 2 || chHeader == 3)
@@ -62,20 +69,32 @@ private:
         return 0;
     }
 
-    //! Set this key data to be invalid
+
+    /**
+     * @brief Invalidate Set this key data to be invalid
+     */
     void Invalidate()
     {
         vch[0] = 0xFF;
     }
 
 public:
-    //! Construct an invalid public key.
+
+    /**
+     * @brief CPubKey Construct an invalid public key.
+     */
     CPubKey()
     {
         Invalidate();
     }
 
-    //! Initialize a public key using begin/end iterators to byte data.
+
+    /**
+     * @brief Set Initialize a public key using begin/end iterators to byte data.
+     * @param pbegin
+     * @param pend
+     */
+
     template <typename T>
     void Set(const T pbegin, const T pend)
     {
@@ -86,26 +105,58 @@ public:
             Invalidate();
     }
 
-    //! Construct a public key using begin/end iterators to byte data.
+
+    /**
+     * @brief CPubKey Construct a public key using begin/end iterators to byte data.
+     * @param pbegin start iterator
+     * @param pend - end iterator
+     */
     template <typename T>
     CPubKey(const T pbegin, const T pend)
     {
         Set(pbegin, pend);
     }
 
-    //! Construct a public key from a byte vector.
+
+    /**
+     * @brief CPubKey Construct a public key from a byte vector.
+     * @param _vch
+     */
     explicit CPubKey(const std::vector<unsigned char>& _vch)
     {
         Set(_vch.begin(), _vch.end());
     }
 
-    //! Simple read-only vector-like interface to the pubkey data.
+
+    /**
+     * @brief size Simple read-only vector-like interface to the pubkey data.
+     * @return
+     */
     unsigned int size() const { return GetLen(vch[0]); }
+    /**
+     * @brief begin
+     * @return
+     */
     const unsigned char* begin() const { return vch; }
+    /**
+     * @brief end
+     * @return
+     */
     const unsigned char* end() const { return vch + size(); }
+    /**
+     * @brief operator []
+     * @param pos
+     * @return
+     */
     const unsigned char& operator[](unsigned int pos) const { return vch[pos]; }
 
-    //! Comparator implementation.
+
+    /**
+     * @brief operator == Comparator implementation.
+     * @param a
+     * @param b
+     * @return
+     */
     friend bool operator==(const CPubKey& a, const CPubKey& b)
     {
         return a.vch[0] == b.vch[0] &&
@@ -121,11 +172,21 @@ public:
                (a.vch[0] == b.vch[0] && memcmp(a.vch, b.vch, a.size()) < 0);
     }
 
-    //! Implement serialization, as if this was a byte vector.
+
+    /**
+     * @brief GetSerializeSize Implement serialization, as if this was a byte vector.
+     * @return
+     */
     unsigned int GetSerializeSize(int /*nType*/, int /*nVersion*/) const
     {
         return size() + 1;
     }
+    /**
+     * @brief Serialize
+     * @param s
+     * @param nType
+     * @param nVersion
+     */
     template <typename Stream>
     void Serialize(Stream& s, int nType, int nVersion) const
     {
@@ -133,6 +194,12 @@ public:
         ::WriteCompactSize(s, len);
         s.write((char*)vch, len);
     }
+    /**
+     * @brief Unserialize
+     * @param s
+     * @param nType
+     * @param nVersion
+     */
     template <typename Stream>
     void Unserialize(Stream& s, int nType, int nVersion)
     {
@@ -148,52 +215,82 @@ public:
         }
     }
 
-    //! Get the KeyID of this public key (hash of its serialization)
+
+    /**
+     * @brief GetID Get the KeyID of this public key (hash of its serialization)
+     * @return
+     */
     CKeyID GetID() const
     {
         return CKeyID(Hash160(vch, vch + size()));
     }
 
-    //! Get the 256-bit hash of this public key.
+
+    /**
+     * @brief GetHash Get the 256-bit hash of this public key.
+     * @return  the 256-bit hash of this public key.
+     */
     uint256 GetHash() const
     {
         return Hash(vch, vch + size());
     }
 
-    /*
-     * Check syntactic correctness.
-     *
+    /**
+     * @brief IsValid Check syntactic correctness.
      * Note that this is consensus critical as CheckSig() calls it!
+     * @return
      */
     bool IsValid() const
     {
         return size() > 0;
     }
 
-    //! fully validate whether this is a valid public key (more expensive than IsValid())
+
+    /**
+     * @brief IsFullyValid  fully validate whether this is a valid public key (more expensive than IsValid())
+     * @return
+     */
     bool IsFullyValid() const;
 
-    //! Check whether this is a compressed public key.
+    /**
+     * @brief IsCompressed Check whether this is a compressed public key.
+     * @return
+     */
     bool IsCompressed() const
     {
         return size() == 33;
     }
 
     /**
-     * Verify a DER signature (~72 bytes).
+     * @brief Verify Verify a DER signature (~72 bytes).
      * If this public key is not fully valid, the return value will be false.
+     * @param hash
+     * @param vchSig
+     * @return
      */
     bool Verify(const uint256& hash, const std::vector<unsigned char>& vchSig) const;
 
     /**
-     * Check whether a signature is normalized (lower-S).
+     * @brief CheckLowS Check whether a signature is normalized (lower-S).
+     * @param vchSig
+     * @return
      */
     static bool CheckLowS(const std::vector<unsigned char>& vchSig);
 
-    //! Recover a public key from a compact signature.
+
+    /**
+     * @brief RecoverCompact Recover a public key from a compact signature.
+     * @param hash
+     * @param vchSig
+     * @return
+     */
     bool RecoverCompact(const uint256& hash, const std::vector<unsigned char>& vchSig);
 
-    //! Turn this public key into an uncompressed public key.
+
+    /**
+     * @brief Decompress Turn this public key into an uncompressed public key.
+     * @return
+     */
     bool Decompress();
 
     //! Derive BIP32 child pubkey.
@@ -216,14 +313,32 @@ struct CExtPubKey {
             a.pubkey == b.pubkey;
     }
 
+    /**
+     * @brief Encode
+     * @param code
+     */
     void Encode(unsigned char code[BIP32_EXTKEY_SIZE]) const;
+    /**
+     * @brief Decode
+     * @param code
+     */
     void Decode(const unsigned char code[BIP32_EXTKEY_SIZE]);
     // bool Derive(CExtPubKey& out, unsigned int nChild) const;
 
+    /**
+     * @brief GetSerializeSize
+     * @return
+     */
     unsigned int GetSerializeSize(int /*nType*/, int /*nVersion*/) const
     {
         return BIP32_EXTKEY_SIZE+1; //add one byte for the size (compact int)
     }
+    /**
+     * @brief Serialize
+     * @param s
+     * @param nType
+     * @param nVersion
+     */
     template <typename Stream>
     void Serialize(Stream& s, int nType, int nVersion) const
     {
@@ -233,6 +348,12 @@ struct CExtPubKey {
         Encode(code);
         s.write((const char *)&code[0], len);
     }
+    /**
+     * @brief Unserialize
+     * @param s
+     * @param nType
+     * @param nVersion
+     */
     template <typename Stream>
     void Unserialize(Stream& s, int nType, int nVersion)
     {
@@ -245,8 +366,11 @@ struct CExtPubKey {
     }
 };
 
-/** Users of this module must hold an ECCVerifyHandle. The constructor and
- *  destructor of these are not allowed to run in parallel, though. */
+
+/**
+ * @brief The ECCVerifyHandle class Users of this module must hold an ECCVerifyHandle. The constructor and
+ *  destructor of these are not allowed to run in parallel, though.
+ */
 class ECCVerifyHandle
 {
     static int refcount;

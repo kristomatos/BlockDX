@@ -19,6 +19,18 @@ public:
     BccWalletConnector();
 
 public:
+    /**
+     * @brief createRefundTransaction
+     * @param inputs
+     * @param outputs
+     * @param mpubKey
+     * @param mprivKey
+     * @param innerScript
+     * @param lockTime
+     * @param txId
+     * @param rawTx
+     * @return
+     */
     bool createRefundTransaction(const std::vector<std::pair<std::string, int> > & inputs,
                                  const std::vector<std::pair<std::string, double> > & outputs,
                                  const std::vector<unsigned char> & mpubKey,
@@ -28,6 +40,18 @@ public:
                                  std::string & txId,
                                  std::string & rawTx);
 
+    /**
+     * @brief createPaymentTransaction
+     * @param inputs
+     * @param outputs
+     * @param mpubKey
+     * @param mprivKey
+     * @param xpubKey
+     * @param innerScript
+     * @param txId
+     * @param rawTx
+     * @return
+     */
     bool createPaymentTransaction(const std::vector<std::pair<std::string, int> > & inputs,
                                   const std::vector<std::pair<std::string, double> > & outputs,
                                   const std::vector<unsigned char> & mpubKey,

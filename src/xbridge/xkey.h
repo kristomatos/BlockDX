@@ -80,7 +80,7 @@ public:
 
 
     /**
-      *Destructor (again necessary because of memlocking).
+      * Destructor (again necessary because of memlocking).
       * */
     ~CKey()
     {
@@ -216,7 +216,9 @@ public:
      */
     bool Load(CPrivKey& privkey, CPubKey& vchPubKey, bool fSkipCheck);
 };
-
+/**
+ * @brief The CExtKey struct
+ */
 struct CExtKey {
     unsigned char nDepth;
     unsigned char vchFingerprint[4];
@@ -233,11 +235,41 @@ struct CExtKey {
             a.key == b.key;
     }
 
+    /**
+     * @brief Encode
+     * @param code
+     */
     void Encode(unsigned char code[BIP32_EXTKEY_SIZE]) const;
+    /**
+     * @brief Decode
+     * @param code
+     */
     void Decode(const unsigned char code[BIP32_EXTKEY_SIZE]);
+    /**
+     * @brief Derive
+     * @param out
+     * @param nChild
+     * @return
+     */
     bool Derive(CExtKey& out, unsigned int nChild) const;
+    /**
+     * @brief Neuter
+     * @return
+     */
     CExtPubKey Neuter() const;
+    /**
+     * @brief SetMaster
+     * @param seed
+     * @param nSeedLen
+     */
     void SetMaster(const unsigned char* seed, unsigned int nSeedLen);
+
+    /**
+     * @brief Serialize
+     * @param s
+     * @param nType
+     * @param nVersion
+     */
     template <typename Stream>
     void Serialize(Stream& s, int nType, int nVersion) const
     {
@@ -247,6 +279,12 @@ struct CExtKey {
         Encode(code);
         s.write((const char *)&code[0], len);
     }
+    /**
+     * @brief Unserialize
+     * @param s
+     * @param nType
+     * @param nVersion
+     */
     template <typename Stream>
     void Unserialize(Stream& s, int nType, int nVersion)
     {

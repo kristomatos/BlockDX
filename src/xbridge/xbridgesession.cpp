@@ -48,10 +48,20 @@ namespace xbridge
 
 //******************************************************************************
 //******************************************************************************
+/**
+ * @brief The PrintErrorCode struct
+ */
 struct PrintErrorCode
 {
+    /**
+     * @brief error
+     */
     const boost::system::error_code & error;
 
+    /**
+     * @brief PrintErrorCode
+     * @param e
+     */
     explicit PrintErrorCode(const boost::system::error_code & e) : error(e) {}
 
     friend std::ostream & operator<<(std::ostream & out, const PrintErrorCode & e)
@@ -62,68 +72,235 @@ struct PrintErrorCode
 
 //*****************************************************************************
 //*****************************************************************************
+/**
+ * @brief The Session::Impl class
+ */
 class Session::Impl
 {
     friend class Session;
 
 protected:
+    /**
+     * @brief sendPacket
+     * @param to
+     * @param packet
+     */
     void sendPacket(const std::vector<unsigned char> & to, const XBridgePacketPtr & packet);
+    /**
+     * @brief sendPacketBroadcast
+     * @param packet
+     */
     void sendPacketBroadcast(XBridgePacketPtr packet);
 
-    // return true if packet not for me, relayed
+
+    /**
+     * @brief checkPacketAddress return true if packet not for me, relayed
+     * @param packet
+     * @return
+     */
     bool checkPacketAddress(XBridgePacketPtr packet);
 
     // fn search xaddress in transaction and restore full 'coin' address as string
+    /**
+     * @brief isAddressInTransaction
+     * @param address
+     * @param tx
+     * @return
+     */
     bool isAddressInTransaction(const std::vector<unsigned char> & address,
                                 const TransactionPtr & tx);
 
 protected:
+    /**
+     * @brief encryptPacket
+     * @param packet
+     * @return
+     */
     bool encryptPacket(XBridgePacketPtr packet);
+    /**
+     * @brief decryptPacket
+     * @param packet
+     * @return
+     */
     bool decryptPacket(XBridgePacketPtr packet);
 
 protected:
+    /**
+     * @brief processInvalid
+     * @param packet
+     * @return
+     */
     bool processInvalid(XBridgePacketPtr packet);
+    /**
+     * @brief processZero
+     * @param packet
+     * @return
+     */
     bool processZero(XBridgePacketPtr packet);
+    /**
+     * @brief processXChatMessage
+     * @param packet
+     * @return
+     */
     bool processXChatMessage(XBridgePacketPtr packet);
 
+    /**
+     * @brief processTransaction
+     * @param packet
+     * @return
+     */
     bool processTransaction(XBridgePacketPtr packet);
+    /**
+     * @brief processPendingTransaction
+     * @param packet
+     * @return
+     */
     bool processPendingTransaction(XBridgePacketPtr packet);
+    /**
+     * @brief processTransactionAccepting
+     * @param packet
+     * @return
+     */
     bool processTransactionAccepting(XBridgePacketPtr packet);
 
+    /**
+     * @brief processTransactionHold
+     * @param packet
+     * @return
+     */
     bool processTransactionHold(XBridgePacketPtr packet);
+    /**
+     * @brief processTransactionHoldApply
+     * @param packet
+     * @return
+     */
     bool processTransactionHoldApply(XBridgePacketPtr packet);
 
+    /**
+     * @brief processTransactionInit
+     * @param packet
+     * @return
+     */
     bool processTransactionInit(XBridgePacketPtr packet);
+    /**
+     * @brief processTransactionInitialized
+     * @param packet
+     * @return
+     */
     bool processTransactionInitialized(XBridgePacketPtr packet);
 
+    /**
+     * @brief processTransactionCreate
+     * @param packet
+     * @return
+     */
     bool processTransactionCreate(XBridgePacketPtr packet);
+    /**
+     * @brief processTransactionCreatedA
+     * @param packet
+     * @return
+     */
     bool processTransactionCreatedA(XBridgePacketPtr packet);
+    /**
+     * @brief processTransactionCreatedB
+     * @param packet
+     * @return
+     */
     bool processTransactionCreatedB(XBridgePacketPtr packet);
 
+    /**
+     * @brief processTransactionConfirmA
+     * @param packet
+     * @return
+     */
     bool processTransactionConfirmA(XBridgePacketPtr packet);
+    /**
+     * @brief processTransactionConfirmedA
+     * @param packet
+     * @return
+     */
     bool processTransactionConfirmedA(XBridgePacketPtr packet);
 
+    /**
+     * @brief processTransactionConfirmB
+     * @param packet
+     * @return
+     */
     bool processTransactionConfirmB(XBridgePacketPtr packet);
+    /**
+     * @brief processTransactionConfirmedB
+     * @param packet
+     * @return
+     */
     bool processTransactionConfirmedB(XBridgePacketPtr packet);
 
+    /**
+     * @brief finishTransaction
+     * @param tr
+     * @return
+     */
     bool finishTransaction(TransactionPtr tr);
+    /**
+     * @brief sendCancelTransaction
+     * @param txid
+     * @param reason
+     * @return
+     */
     bool sendCancelTransaction(const uint256 & txid,
-                                       const TxCancelReason & reason);
+                               const TxCancelReason & reason);
+    /**
+     * @brief sendCancelTransaction
+     * @param tx
+     * @param reason
+     * @return
+     */
     bool sendCancelTransaction(const TransactionDescrPtr & tx,
-                                       const TxCancelReason & reason);
+                               const TxCancelReason & reason);
+    /**
+     * @brief rollbackTransaction
+     * @param tr
+     * @return
+     */
     bool rollbackTransaction(TransactionPtr tr);
 
+    /**
+     * @brief processTransactionCancel
+     * @param packet
+     * @return
+     */
     bool processTransactionCancel(XBridgePacketPtr packet);
+    /**
+     * @brief cancelOrRollbackTransaction
+     * @param txid
+     * @param reason
+     * @return
+     */
     bool cancelOrRollbackTransaction(const uint256 & txid, const TxCancelReason & reason);
 
+    /**
+     * @brief processTransactionFinished
+     * @param packet
+     * @return
+     */
     bool processTransactionFinished(XBridgePacketPtr packet);
+    /**
+     * @brief processTransactionRollback
+     * @param packet
+     * @return
+     */
     bool processTransactionRollback(XBridgePacketPtr packet);
 
 protected:
+    /**
+     * @brief m_myid
+     */
     std::vector<unsigned char> m_myid;
 
     typedef fastdelegate::FastDelegate1<XBridgePacketPtr, bool> PacketHandler;
     typedef std::map<const int, PacketHandler> PacketHandlersMap;
+    /**
+     * @brief m_handlers
+     */
     PacketHandlersMap m_handlers;
 
 };
